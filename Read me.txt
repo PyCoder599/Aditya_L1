@@ -1,0 +1,19 @@
+# Aditya-L1 Digital Twin Simulation
+
+This project simulates the orbital dynamics of ISRO's Aditya-L1 mission using the Circular Restricted Three Body Problem (CR3BP).
+
+## Features
+- Sun–Earth system modeling
+- L1 Lagrange point computation
+- Spacecraft trajectory propagation
+- 2D visualization
+
+## Physics Model
+Circular Restricted Three Body Problem (CR3BP) in rotating frame.
+
+## Requirements
+requirements.txt
+
+## Author
+Pankaj Hurkat
+MSc Physics
