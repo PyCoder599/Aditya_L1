@@ -1,3 +1,5 @@
+import matplotlib
+matplotlib.use("TKAgg")
 import matplotlib.pyplot as plt
 from core.constants import MU
 

@@ -1,5 +1,5 @@
 import numpy as np
-from constants import MU
+from .constants import MU
 
 
 def equations(t, state):

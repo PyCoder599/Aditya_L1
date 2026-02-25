@@ -1,13 +1,11 @@
+from core.halo import halo_initial_conditions
 from core.propagator import propagate
 from visualization.plot2d import plot_trajectory
 
 
 def main():
-    # Initial condition near L1
-    state0 = [0.99, 0.01, 0.0, 0.0]
-
-    solution = propagate(state0)
-
+    state0 = halo_initial_conditions(amplitude=0.002)
+    solution = propagate(state0, t_final=102)
     plot_trajectory(solution)
 
 

@@ -1,6 +1,6 @@
 import numpy as np
 from scipy.integrate import solve_ivp
-from cr3bp import equations
+from .cr3bp import equations
 
 
 def propagate(state0, t_final=10, steps=5000):
