@@ -9,6 +9,7 @@
     <option name="namespacePackageFolders">
       <list>
         <option value="$MODULE_DIR$/core" />
+        <option value="$MODULE_DIR$/visualization" />
       </list>
     </option>
   </component>

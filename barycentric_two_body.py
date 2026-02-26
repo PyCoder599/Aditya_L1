@@ -4,22 +4,14 @@ matplotlib.use("TKAgg")
 from scipy.integrate import solve_ivp
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
-
-# -------------------------
-# Constants
-# -------------------------
-
-G = 6.67430e-11
-M_sun = 1.989e30
-M_earth = 5.972e24
-AU = 1.496e11
+from core.constants import *
 
 # -------------------------
 # Initial Positions (Barycenter at origin)
 # -------------------------
 
-r_sun = (M_earth / (M_sun + M_earth)) * AU
-r_earth = (M_sun / (M_sun + M_earth)) * AU
+r_sun = (M_EARTH / (M_SUN + M_EARTH)) * AU
+r_earth = (M_SUN / (M_SUN + M_EARTH)) * AU
 
 # Sun at negative x
 x_s0 = -r_sun
@@ -30,7 +22,7 @@ x_e0 = r_earth
 y_e0 = 0
 
 # Orbital angular velocity
-omega = np.sqrt(G * (M_sun + M_earth) / AU ** 3)
+omega = np.sqrt(G * (M_SUN + M_EARTH) / AU ** 3)
 
 # Velocities perpendicular to radius
 vx_s0 = 0
@@ -56,11 +48,11 @@ def two_body_mutual(t, state):
     dy = ye - ys
     r = np.sqrt(dx ** 2 + dy ** 2)
 
-    ax_s = G * M_earth * dx / r ** 3
-    ay_s = G * M_earth * dy / r ** 3
+    ax_s = G * M_EARTH * dx / r ** 3
+    ay_s = G * M_EARTH * dy / r ** 3
 
-    ax_e = -G * M_sun * dx / r ** 3
-    ay_e = -G * M_sun * dy / r ** 3
+    ax_e = -G * M_SUN * dx / r ** 3
+    ay_e = -G * M_SUN * dy / r ** 3
 
     return [
         vxs, vys, ax_s, ay_s,
@@ -72,9 +64,8 @@ def two_body_mutual(t, state):
 # Time span (1 year)
 # -------------------------
 
-year = 365.25 * 24 * 3600
-t_span = (0, year)
-t_eval = np.linspace(0, year, 1000)
+t_span = (0, YEAR)
+t_eval = np.linspace(0, YEAR, 1000)
 
 sol = solve_ivp(
     two_body_mutual,
@@ -118,6 +109,7 @@ def update(frame):
     earth_path.set_data(sol.y[4][:frame], sol.y[5][:frame])
 
     return sun_dot, earth_dot, sun_path, earth_path
+
 
 ani = animation.FuncAnimation(
     fig, update,

@@ -3,14 +3,7 @@ import matplotlib
 matplotlib.use("TKAgg")
 from scipy.integrate import solve_ivp
 import matplotlib.pyplot as plt
-
-# -----------------------------
-# Physical Constants (SI Units)
-# -----------------------------
-
-G = 6.67430e-11
-M_sun = 1.989e30
-AU = 1.496e11
+from core.constants import G, M_SUN, AU
 
 # -----------------------------
 # Initial Conditions
@@ -21,7 +14,7 @@ x0 = AU
 y0 = 0
 
 # Circular orbit velocity
-v0 = np.sqrt(G * M_sun / AU)
+v0 = np.sqrt(G * M_SUN / AU)
 
 vx0 = 0
 vy0 = v0
@@ -38,8 +31,8 @@ def two_body(t, state):
 
     r = np.sqrt(x ** 2 + y ** 2)
 
-    ax = -G * M_sun * x / r ** 3
-    ay = -G * M_sun * y / r ** 3
+    ax = -G * M_SUN * x / r ** 3
+    ay = -G * M_SUN * y / r ** 3
 
     return [vx, vy, ax, ay]
 

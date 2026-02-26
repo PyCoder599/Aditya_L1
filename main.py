@@ -1,12 +1,10 @@
-from core.halo import halo_initial_conditions
-from core.propagator import propagate
-from visualization.plot2d import plot_trajectory
+from core.kepler_orbit import kepler_initial_conditions
+from visualization.solar_system import run_simulation
 
 
 def main():
-    state0 = halo_initial_conditions(amplitude=0.002)
-    solution = propagate(state0, t_final=102)
-    plot_trajectory(solution)
+    state = kepler_initial_conditions(e=0.0167)
+    run_simulation(state, kepler_initial_conditions)
 
 
 if __name__ == "__main__":
