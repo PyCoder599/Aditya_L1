@@ -14,6 +14,7 @@ e_earth = 0.0167
 M_MOON = 7.347e22
 MOON_DISTANCE = 384400000  # meters
 MOON_PERIOD = 27.3 * 24 * 3600
+MOON_INCLINATION = np.radians(5.145)
 
 # CR3BP normalized parameter
 MU = M_EARTH / (M_SUN + M_EARTH)

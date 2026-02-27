@@ -1,7 +1,7 @@
 import random
 import numpy as np
 from vpython import sphere, vector, rate, color, canvas, local_light
-from core.constants import AU, MOON_PERIOD, MOON_DISTANCE
+from core.constants import AU, MOON_PERIOD, MOON_DISTANCE, MOON_INCLINATION
 from core.dynamics import compute_acceleration
 from core.integrator import step
 from .ui_controls import create_ui, create_zoom_controls, add_restart, add_focus_controls
@@ -69,12 +69,21 @@ def run_simulation(state, initial_state_func):
         elif simulation["focus"] == "earth":
             scene.center = earth.pos
 
-        sun.pos = vector(state["xs"] * visual_scale, state["ys"] * visual_scale, 0)
+        sun.pos = vector(state["xs"] * visual_scale, state["ys"] * visual_scale, state["zs"] * visual_scale)
 
-        earth.pos = vector(state["xe"] * visual_scale, state["ye"] * visual_scale, 0)
+        earth.pos = vector(state["xe"] * visual_scale, state["ye"] * visual_scale, state["ze"] * visual_scale)
         earth.rotate(angle=earth.rotate_speed * dt * simulation["speed"], axis=vector(0, 0, 1))
 
-        moon_x = state["xe"] + MOON_DISTANCE * np.cos(moon_angle)
-        moon_y = state["ye"] + MOON_DISTANCE * np.sin(moon_angle)
-        moon.pos = vector(moon_x * visual_scale, moon_y * visual_scale, 0)
+        # Local circular orbit
+        x_orb = MOON_DISTANCE * np.cos(moon_angle)
+        y_orb = MOON_DISTANCE * np.sin(moon_angle)
+        z_orb = 0
+        # Tilt orbit around X-axis
+        y_tilt = y_orb * np.cos(MOON_INCLINATION)
+        z_tilt = y_orb * np.sin(MOON_INCLINATION)
+
+        moon_x = state["xe"] + x_orb
+        moon_y = state["ye"] + y_tilt
+        moon_z = state["ze"] + z_tilt
+        moon.pos = vector(moon_x * visual_scale, moon_y * visual_scale, moon_z * visual_scale)
 

@@ -15,13 +15,18 @@ def kepler_initial_conditions(a=AU, e=e_earth):
 
     state = {
         "xs": -r_s,
-        "ys": 0,
-        "vxs": 0,
+        "ys": 0.0,
+        "zs": 0.0,
+        "vxs": 0.0,
         "vys": -omega * r_s,
+        "vzs": 0.0,
+
         "xe": r_e,
         "ye": 0,
+        "ze": 0,
         "vxe": 0,
-        "vye": omega * r_e
+        "vye": omega * r_e,
+        "vze": 0,
     }
 
     return state
