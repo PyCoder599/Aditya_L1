@@ -1,16 +1,17 @@
 import random
 import numpy as np
-from vpython import sphere, vector, rate, color, canvas, local_light
-from core.constants import AU, MOON_PERIOD, MOON_DISTANCE, MOON_INCLINATION
+from vpython import sphere, vector, rate, color, canvas, local_light, label
+from core.constants import *
 from core.dynamics import compute_acceleration
 from core.integrator import step
-from .ui_controls import create_ui, create_zoom_controls, add_restart, add_focus_controls
+from core.lagrange import compute_Lagrange_points
+from .ui_controls import *
 
 
 def run_simulation(state, initial_state_func):
-
+    SIZE_SCALE = 20
     scene = canvas(title="Interactive Solar System",
-                   width=1000, height=700,
+                   width=1300, height=650,
                    background=color.black)
 
     scene.autoscale = False
@@ -18,11 +19,17 @@ def run_simulation(state, initial_state_func):
 
     visual_scale = 1/AU * 5
 
-    sun = sphere(radius=0.05, color=color.orange, emissive=True)
-    earth = sphere(radius=0.007, color=color.blue, make_trail=True, trail_radius=0.002, retain=500)
+    sun = sphere(
+        radius=R_SUN * visual_scale * SIZE_SCALE,
+        color=color.orange, emissive=True)
+    earth = sphere(
+        radius=R_EARTH * visual_scale * SIZE_SCALE,
+        color=color.blue, make_trail=True, trail_radius=0.002, retain=500)
     earth.rotate_speed = 2 * np.pi / (24 * 3600)
 
-    moon = sphere(radius=0.002, color=color.white, make_trail=True, trail_radius=0.001, retain=500)
+    moon = sphere(
+        radius=R_MOON * visual_scale * SIZE_SCALE,
+        color=color.white, make_trail=True, trail_radius=0.001, retain=500)
     moon_angle = 0
     moon_angular_speed = 2 * np.pi / MOON_PERIOD
 
@@ -36,13 +43,16 @@ def run_simulation(state, initial_state_func):
         "earth": earth,
         "moon": moon,
         "scene": scene,
-        "focus": "sun"
+        "focus": "sun",
+        "Lagrange": False,
+        "launch_aditya": False
     }
 
     create_ui(simulation)
     create_zoom_controls(scene)
     add_restart(simulation)
     add_focus_controls(simulation)
+    add_lagrange(simulation)
 
     dt = 60 * 60 * 6
 
@@ -54,6 +64,25 @@ def run_simulation(state, initial_state_func):
             radius=0.005,
             color=color.white,
             emissive=True
+        )
+
+    lagrange_spheres = {}
+    lagrange_labels = {}
+    for name in ["L1", "L2", "L3", "L4", "L5"]:
+        lagrange_spheres[name] = sphere(
+            radius=0.003,
+            color=color.yellow,
+            emissive=True
+        )
+        lagrange_labels[name] = label(
+            text=name,
+            xoffset=10,
+            yoffset=10,
+            space=0,
+            height=10,
+            border=4,
+            font='sans',
+            visible=False
         )
 
     while True:
@@ -68,6 +97,29 @@ def run_simulation(state, initial_state_func):
 
         elif simulation["focus"] == "earth":
             scene.center = earth.pos
+
+        elif simulation["focus"] == "L1":
+            scene.center = scene.center = scene.center + 0.1*(lagrange_spheres["L1"].pos - scene.center)
+
+        if simulation["Lagrange"]:
+            L_points = compute_Lagrange_points(state)
+            for name, pos in L_points.items():
+                x, y, z = pos
+                scaled_pos = vector(
+                    x * visual_scale,
+                    y * visual_scale,
+                    z * visual_scale
+                )
+
+                lagrange_spheres[name].pos = scaled_pos
+                lagrange_spheres[name].visible = True
+
+                lagrange_labels[name].pos = scaled_pos + vector(0, 0.001, 0)
+                lagrange_labels[name].visible = True
+        else:
+            for name in lagrange_spheres:
+                lagrange_spheres[name].visible = False
+                lagrange_labels[name].visible = False
 
         sun.pos = vector(state["xs"] * visual_scale, state["ys"] * visual_scale, state["zs"] * visual_scale)
 

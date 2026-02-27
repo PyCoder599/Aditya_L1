@@ -47,5 +47,24 @@ def add_focus_controls(simulation):
     def focus_earth(b):
         simulation["focus"] = "earth"
 
+    def focus_L1(b):
+        simulation["focus"] = "L1"
+
     button(text="Focus Sun", bind=focus_sun)
     button(text="Focus Earth", bind=focus_earth)
+    button(text="Focus L1", bind=focus_L1)
+
+
+def add_lagrange(simulation):
+    def toggle_lagrange(b):
+        simulation["Lagrange"] = not simulation["Lagrange"]
+        b.text = "Hide Lagrange Points" if simulation["Lagrange"] else "Show Lagrange Points"
+
+    button(text="Show Lagrange Points", bind=toggle_lagrange)
+
+
+def aditya_L1(simulation):
+    def Launch_aditya(b):
+        simulation["launch_aditya"] = True
+
+    button(text="Launch Aditya-L1", bind=Launch_aditya)
